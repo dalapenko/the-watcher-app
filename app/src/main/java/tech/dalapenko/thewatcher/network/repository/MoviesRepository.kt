@@ -12,7 +12,6 @@ import tech.dalapenko.thewatcher.network.dto.Page
 object MoviesRepository {
 
     private val api: MovieApi
-    private const val LOG_TAG = "MoviesRepository"
 
     init {
         val retrofit = Retrofit.Builder()
@@ -23,6 +22,15 @@ object MoviesRepository {
         api = retrofit.create(MovieApi::class.java)
     }
 
+    fun getNowPlaying(
+        page: Int = 1,
+        language: String = "ru-RU",
+        onSuccess: (result: List<Movie>) -> Unit,
+        onFailure: () -> Unit
+    ) {
+        api.getNowPlaying(page, language).enqueue(PageCallback(onSuccess, onFailure))
+    }
+
     fun getPopular(
         page: Int = 1,
         language: String = "ru-RU",
@@ -30,6 +38,15 @@ object MoviesRepository {
         onFailure: () -> Unit
     ) {
         api.getPopular(page, language).enqueue(PageCallback(onSuccess, onFailure))
+    }
+
+    fun getTopRated(
+        page: Int = 1,
+        language: String = "ru-RU",
+        onSuccess: (result: List<Movie>) -> Unit,
+        onFailure: () -> Unit
+    ) {
+        api.getTopRated(page, language).enqueue(PageCallback(onSuccess, onFailure))
     }
 }
 

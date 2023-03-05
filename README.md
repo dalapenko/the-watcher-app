@@ -1,6 +1,6 @@
 # The Watcher Mobile App [Android]
 
-![Application screenshot](https://user-images.githubusercontent.com/30049446/222979545-77666bc7-2f8d-4a8e-877a-3ac7a32f9ed9.png =118x250)
+<img src="https://user-images.githubusercontent.com/30049446/222979545-77666bc7-2f8d-4a8e-877a-3ac7a32f9ed9" width="118" height="250" />
 
 ## Description:
 

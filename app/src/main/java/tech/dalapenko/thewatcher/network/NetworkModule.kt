@@ -9,8 +9,9 @@ import tech.dalapenko.thewatcher.data.remote.MovieApi
 object NetworkModule {
 
     private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(HttpLoggingInterceptor())
-        .build()
+        .addInterceptor(
+            HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)
+        ).build()
 
     private val retrofitBuilder = Retrofit.Builder()
         .client(okHttpClient)

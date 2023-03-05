@@ -69,17 +69,7 @@ dependencies {
     implementation "androidx.room:room-ktx:2.5.0"
 
     // Lifecycle components
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
-    implementation "androidx.lifecycle:lifecycle-common-java8:2.5.1"
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-
-    // Kotlin Coroutine
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
-
-    // Layouts
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     // Test libs
     testImplementation 'junit:junit:4.13.2'

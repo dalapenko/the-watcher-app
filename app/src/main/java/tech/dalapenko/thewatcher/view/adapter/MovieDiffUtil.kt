@@ -6,7 +6,7 @@ import tech.dalapenko.thewatcher.data.model.Movie
 class MovieDiffUtil(
     private val oldList: List<Movie>,
     private val newList: List<Movie>
-): DiffUtil.Callback() {
+) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int {
         return oldList.size

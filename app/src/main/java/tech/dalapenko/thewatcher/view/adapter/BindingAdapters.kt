@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import tech.dalapenko.thewatcher.data.model.Movie
 import tech.dalapenko.thewatcher.view.fragment.MainFragmentDirections
 
@@ -14,10 +15,18 @@ class BindingAdapters {
 
     companion object {
 
-        @BindingAdapter("android:emptyLiveData", "android:isInverseEmptyLiveData", requireAll = false)
+        @BindingAdapter(
+            "android:emptyLiveData",
+            "android:isInverseEmptyLiveData",
+            requireAll = false
+        )
         @JvmStatic
-        fun emptyLiveData(view: View, emptyLiveData: MutableLiveData<Boolean>, isInverseEmptyLiveData: Boolean = false) {
-            when(emptyLiveData.value == true xor isInverseEmptyLiveData) {
+        fun emptyLiveData(
+            view: View,
+            emptyLiveData: MutableLiveData<Boolean>,
+            isInverseEmptyLiveData: Boolean = false
+        ) {
+            when (emptyLiveData.value == true xor isInverseEmptyLiveData) {
                 true -> view.visibility = View.VISIBLE
                 false -> view.visibility = View.INVISIBLE
             }
@@ -29,6 +38,7 @@ class BindingAdapters {
             Glide.with(this.context)
                 .load("https://image.tmdb.org/t/p/w342$tmdbPosterPath")
                 .transform(CenterCrop())
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(this);
         }
 

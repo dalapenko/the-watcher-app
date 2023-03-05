@@ -67,7 +67,7 @@ class MainFragment : Fragment() {
 
     private fun setupPopularSection() {
         with(binding.popularRecyclerView) {
-            adapter = nowPlayingAdapter
+            adapter = popularMovieAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }
 
@@ -80,7 +80,7 @@ class MainFragment : Fragment() {
 
     private fun setupTopRatedSection() {
         with(binding.topRatedRecyclerView) {
-            adapter = nowPlayingAdapter
+            adapter = topRatedAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }
 
@@ -96,7 +96,7 @@ class MainFragment : Fragment() {
         }
 
         override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-            when(menuItem.itemId) {
+            when (menuItem.itemId) {
                 R.id.clean_cache_menu -> {
                     movieViewModel.deleteAll()
                     movieViewModel.refreshAll()

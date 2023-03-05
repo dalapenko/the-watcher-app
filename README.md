@@ -24,6 +24,3 @@ Then just use IDE interface or command `./gradlew app:assembleDebug` and install
 ### Note:
 
 Because in app used TMDB api - application may not work in Russia without VPN.
-
-### Screenshots:
-

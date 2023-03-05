@@ -22,7 +22,7 @@
             android:layout_marginEnd="16dp" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/now_playing"
+            android:id="@+id/now_playing_items"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -47,7 +47,7 @@
             android:layout_marginEnd="16dp" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/popular"
+            android:id="@+id/popular_items"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -72,7 +72,7 @@
             android:layout_marginEnd="16dp" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/top_rated"
+            android:id="@+id/top_rated_items"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

@@ -1,6 +1,13 @@
 # The Watcher Mobile App [Android]
 
-<img src="https://user-images.githubusercontent.com/30049446/222979545-77666bc7-2f8d-4a8e-877a-3ac7a32f9ed9" width="118" height="250" />
+<p align="center">
+    <img width="118" height="250" src="https://user-images.githubusercontent.com/30049446/222979877-79646ad4-572f-41cb-9ed0-7b461e8785ed.png#gh-dark-mode-only">
+    <img width="118" height="250" src="https://user-images.githubusercontent.com/30049446/222979906-382c0e28-ca84-49f3-89cb-919312abd260.png#gh-dark-mode-only">
+    <img width="118" height="250" src="https://user-images.githubusercontent.com/30049446/222980109-57420e6a-b971-47cf-99ba-258c9459d167.png#gh-light-mode-only">
+    <img width="118" height="250" src="https://user-images.githubusercontent.com/30049446/222980110-d4bc355e-dd0d-42a5-8d57-94ec97f2cfb1.png#gh-light-mode-only">
+</p>
+
+
 
 ## Description:
 

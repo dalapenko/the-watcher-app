@@ -5,11 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import tech.dalapenko.thewatcher.R
 import tech.dalapenko.thewatcher.data.model.Movie
+import tech.dalapenko.thewatcher.databinding.ItemMovieBinding
 import tech.dalapenko.thewatcher.view.fragment.CardFragment
 import tech.dalapenko.thewatcher.view.fragment.MainFragment
 import tech.dalapenko.thewatcher.view.fragment.MainFragmentDirections
@@ -19,37 +21,37 @@ class MovieAdapter(
 ) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        val view = LayoutInflater
-            .from(parent.context)
-            .inflate(R.layout.item_movie, parent, false)
-
-        return MovieViewHolder(view)
+        return MovieViewHolder.from(parent)
     }
 
     override fun getItemCount(): Int = movies.size
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         holder.bind(movies[position])
-        holder.itemView.setOnClickListener {
-            val action = MainFragmentDirections.actionMainFragmentToCardFragment(movies[position])
-            holder.itemView.findNavController().navigate(action)
-        }
     }
 
     fun updateMovies(movieList: List<Movie>) {
-        movies = movieList
-        notifyDataSetChanged()
+        val movieDiffUtil = MovieDiffUtil(movies, movieList)
+        val diffResult = DiffUtil.calculateDiff(movieDiffUtil)
+        this.movies = movieList
+        diffResult.dispatchUpdatesTo(this)
     }
 
-    inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class MovieViewHolder(
+        private val binding: ItemMovieBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        companion object {
+            fun from(parent: ViewGroup): MovieViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = ItemMovieBinding.inflate(layoutInflater, parent, false)
 
-        private val poster: ImageView = itemView.findViewById(R.id.item_movie_poster)
+                return MovieViewHolder(binding)
+            }
+        }
 
         fun bind(movie: Movie) {
-            Glide.with(itemView)
-                .load("https://image.tmdb.org/t/p/w342${movie.posterPath}")
-                .transform(CenterCrop())
-                .into(poster)
+            binding.movieData = movie
+            binding.executePendingBindings()
         }
     }
 }

@@ -2,31 +2,25 @@ package tech.dalapenko.thewatcher.view.fragment
 
 import android.os.Bundle
 import android.view.*
-import android.widget.LinearLayout
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.Group
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.Visibility
 import tech.dalapenko.thewatcher.R
+import tech.dalapenko.thewatcher.databinding.FragmentMainBinding
 import tech.dalapenko.thewatcher.view.adapter.MovieAdapter
 import tech.dalapenko.thewatcher.view.viewmodel.MovieViewModel
 import tech.dalapenko.thewatcher.view.viewmodel.SharedViewModel
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MainFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MainFragment : Fragment() {
 
     private val movieViewModel: MovieViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
+
+    private var _binding: FragmentMainBinding? = null
+    private val binding get() = _binding!!
 
     private val nowPlayingAdapter by lazy { MovieAdapter() }
     private val popularMovieAdapter by lazy { MovieAdapter() }
@@ -35,39 +29,32 @@ class MainFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_main, container, false)
-        val menuHost: MenuHost = requireActivity()
-
-        menuHost.addMenuProvider(
-            MainFragmentMenuProvider(view), viewLifecycleOwner, Lifecycle.State.RESUMED
-        )
-        registerMainFragmentSections(view)
-
-        return view
-    }
-
-    private fun registerMainFragmentSections(view: View) {
-        registerNowPlayingSection(view)
-        registerPopularSection(view)
-        registerSection(view)
-        registerEmptyDataState(view)
-    }
-
-    private fun registerEmptyDataState(view: View) {
-        fun isVisible(isEmpty: Boolean) = if (isEmpty) View.GONE else View.VISIBLE
-
-        sharedViewModel.emptyLiveData.observe(viewLifecycleOwner) { isEmpty ->
-            view.findViewById<Group>(R.id.now_playing_section).visibility = isVisible(isEmpty)
-            view.findViewById<Group>(R.id.popular_section).visibility = isVisible(isEmpty)
-            view.findViewById<Group>(R.id.top_rated_section).visibility = isVisible(isEmpty)
-            view.findViewById<ConstraintLayout>(R.id.no_data_item).visibility = isVisible(!isEmpty)
+    ): View {
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.sharedViewModel = sharedViewModel
+        with(requireActivity() as MenuHost) {
+            addMenuProvider(MainFragmentMenuProvider(), viewLifecycleOwner, Lifecycle.State.RESUMED)
         }
+
+        setupFragmentLayouts()
+
+        return binding.root
     }
 
-    private fun registerNowPlayingSection(view: View) {
-        view.findViewById<RecyclerView>(R.id.now_playing_items).apply {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun setupFragmentLayouts() {
+        setupNowPlayingSection()
+        setupPopularSection()
+        setupTopRatedSection()
+    }
+
+    private fun setupNowPlayingSection() {
+        with(binding.nowPlayingRecyclerView) {
             adapter = nowPlayingAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }
@@ -78,11 +65,12 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun registerPopularSection(view: View) {
-        view.findViewById<RecyclerView>(R.id.popular_items).apply {
-            adapter = popularMovieAdapter
+    private fun setupPopularSection() {
+        with(binding.popularRecyclerView) {
+            adapter = nowPlayingAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }
+
 
         movieViewModel.popularMovies.observe(viewLifecycleOwner) { data ->
             sharedViewModel.isLiveDataEmpty(data)
@@ -90,9 +78,9 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun registerSection(view: View) {
-        view.findViewById<RecyclerView>(R.id.top_rated_items).apply {
-            adapter = topRatedAdapter
+    private fun setupTopRatedSection() {
+        with(binding.topRatedRecyclerView) {
+            adapter = nowPlayingAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }
 
@@ -102,15 +90,18 @@ class MainFragment : Fragment() {
         }
     }
 
-    private inner class MainFragmentMenuProvider(private val view: View) : MenuProvider {
+    private inner class MainFragmentMenuProvider : MenuProvider {
         override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
             menuInflater.inflate(R.menu.main_fragment_menu, menu)
         }
 
         override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
             when(menuItem.itemId) {
-                R.id.clean_cache_menu -> movieViewModel.deleteAll()
-                R.id.refresh_menu -> registerMainFragmentSections(view)
+                R.id.clean_cache_menu -> {
+                    movieViewModel.deleteAll()
+                    movieViewModel.refreshAll()
+                }
+                R.id.refresh_menu -> movieViewModel.refreshAll()
             }
 
             return true

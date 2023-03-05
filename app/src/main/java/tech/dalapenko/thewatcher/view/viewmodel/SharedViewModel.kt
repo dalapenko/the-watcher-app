@@ -10,7 +10,7 @@ import tech.dalapenko.thewatcher.network.NetworkModule
 
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
 
-    val emptyLiveData: MutableLiveData<Boolean> = MutableLiveData(true)
+    val emptyLiveData: MutableLiveData<Boolean> = MutableLiveData(false)
 
     fun isLiveDataEmpty(movieData: List<Movie>) {
         emptyLiveData.value = movieData.isEmpty()

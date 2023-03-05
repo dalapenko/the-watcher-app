@@ -1,10 +1,13 @@
 package tech.dalapenko.thewatcher.data.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
 @Entity(tableName = "movie_table")
+@Parcelize
 data class Movie(
     @SerializedName("poster_path") val posterPath: String?,
     @SerializedName("adult") val adult: Boolean,
@@ -20,4 +23,4 @@ data class Movie(
     @SerializedName("vote_count") val voteCount: Int,
     @SerializedName("video") val video: Boolean,
     @SerializedName("vote_average") val voteAverage: Float
-)
+) : Parcelable

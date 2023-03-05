@@ -1,10 +1,7 @@
 package tech.dalapenko.thewatcher.data.local
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import tech.dalapenko.thewatcher.data.model.Movie
 
 @Dao
@@ -20,5 +17,8 @@ interface MovieDao {
     fun getNowPlaying(): LiveData<List<Movie>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertMovie(vararg movie: Movie)
+    suspend fun insertMovie(vararg movie: Movie)
+
+    @Query("DELETE FROM movie_table")
+    fun deleteAll()
 }

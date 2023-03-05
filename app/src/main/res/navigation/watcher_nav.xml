@@ -40,5 +40,8 @@
         <action
             android:id="@+id/action_cardFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <argument
+            android:name="current"
+            app:argType="tech.dalapenko.thewatcher.data.model.Movie" />
     </fragment>
 </navigation>

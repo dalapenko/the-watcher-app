@@ -4,11 +4,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import tech.dalapenko.thewatcher.R
 import tech.dalapenko.thewatcher.data.model.Movie
+import tech.dalapenko.thewatcher.view.fragment.CardFragment
+import tech.dalapenko.thewatcher.view.fragment.MainFragment
+import tech.dalapenko.thewatcher.view.fragment.MainFragmentDirections
 
 class MovieAdapter(
     private var movies: List<Movie> = emptyList()
@@ -18,6 +22,7 @@ class MovieAdapter(
         val view = LayoutInflater
             .from(parent.context)
             .inflate(R.layout.item_movie, parent, false)
+
         return MovieViewHolder(view)
     }
 
@@ -25,6 +30,10 @@ class MovieAdapter(
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         holder.bind(movies[position])
+        holder.itemView.setOnClickListener {
+            val action = MainFragmentDirections.actionMainFragmentToCardFragment(movies[position])
+            holder.itemView.findNavController().navigate(action)
+        }
     }
 
     fun updateMovies(movieList: List<Movie>) {

@@ -28,7 +28,7 @@ class MovieRepository(
                 dataSource(
                     localData = { movieDao.getPopular() },
                     remoteData = { movieApi.getPopular() },
-                    whenRemoteFetched = updateLocalData()
+                    whenRemoteFetched = insertLocalData()
                 )
             )
         }
@@ -40,7 +40,7 @@ class MovieRepository(
                 dataSource(
                     localData = { movieDao.getTopRated() },
                     remoteData = { movieApi.getTopRated() },
-                    whenRemoteFetched = updateLocalData()
+                    whenRemoteFetched = insertLocalData()
                 )
             )
         }
@@ -52,14 +52,22 @@ class MovieRepository(
                 dataSource(
                     localData = { movieDao.getNowPlaying() },
                     remoteData = { movieApi.getNowPlaying() },
-                    whenRemoteFetched = updateLocalData()
+                    whenRemoteFetched = insertLocalData()
                 )
             )
         }
     }
 
-    private fun updateLocalData(): (List<Movie>) -> Unit {
-        return { ioCoroutineScope.launch { movieDao.insertMovie(*it.toTypedArray()) } }
+    fun deleteAll() {
+        ioCoroutineScope.launch { movieDao.deleteAll() }
+    }
+
+    fun insertLocalData(vararg movie: Movie) {
+        ioCoroutineScope.launch { movieDao.insertMovie(*movie) }
+    }
+
+    private fun insertLocalData(): (List<Movie>) -> Unit {
+        return { insertLocalData(*it.toTypedArray()) }
     }
 
     private fun <T> dataSource(

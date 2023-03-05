@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -70,6 +72,9 @@ dependencies {
     // Kotlin Coroutine
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+
+    // Layouts
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     // Test libs
     testImplementation 'junit:junit:4.13.2'

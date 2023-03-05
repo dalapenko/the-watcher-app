@@ -31,7 +31,7 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = this.viewLifecycleOwner
         binding.sharedViewModel = sharedViewModel
         with(requireActivity() as MenuHost) {
             addMenuProvider(MainFragmentMenuProvider(), viewLifecycleOwner, Lifecycle.State.RESUMED)
@@ -54,7 +54,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setupNowPlayingSection() {
-        with(binding.nowPlayingRecyclerView) {
+        with(binding.nowPlayingSection.sectionRecyclerView) {
             adapter = nowPlayingAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }
@@ -66,7 +66,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setupPopularSection() {
-        with(binding.popularRecyclerView) {
+        with(binding.popularSection.sectionRecyclerView) {
             adapter = popularMovieAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }
@@ -79,7 +79,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setupTopRatedSection() {
-        with(binding.topRatedRecyclerView) {
+        with(binding.topRatedSection.sectionRecyclerView) {
             adapter = topRatedAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }

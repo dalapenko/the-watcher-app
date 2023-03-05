@@ -12,6 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
         android:id="@+id/movie_information"
         tools:context=".view.fragment.CardFragment">
 
@@ -23,18 +24,40 @@
             android:layout_marginEnd="16dp"
             android:tmdbPosterPath="@{args.current.posterPath}"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/overview_title"
+            app:layout_constraintRight_toLeftOf="@id/rating_title"/>
 
         <TextView
             android:id="@+id/movie_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@{args.current.title}"
+            android:fontFamily="@font/roboto_medium"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/movie_poster"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/movie_release_date"/>
+
+        <TextView
+            android:id="@+id/rating_title"
+            android:text="@string/rating"
+            android:fontFamily="@font/roboto_medium"
+            android:layout_marginBottom="4dp"
+            android:textStyle="bold"
+            android:textSize="11sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:gravity="start"
+            app:layout_constraintLeft_toLeftOf="@+id/movie_rating"
+            app:layout_constraintBottom_toTopOf="@+id/movie_rating"/>
 
         <RatingBar
             android:id="@+id/movie_rating"
@@ -44,10 +67,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
+            android:paddingBottom="24dp"
             android:rating="@{args.current.voteAverage}"
             app:layout_constraintLeft_toRightOf="@+id/movie_poster"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/movie_release_date" />
+            app:layout_constraintTop_toBottomOf="@+id/movie_release_date"
+            app:layout_constraintBottom_toTopOf="@+id/overview_title" />
 
         <TextView
             android:id="@+id/movie_release_date"
@@ -55,10 +80,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
+            android:paddingBottom="24dp"
+            android:fontFamily="@font/roboto_mono"
+            android:textSize="14sp"
             android:text="@{args.current.releaseDate}"
             app:layout_constraintLeft_toRightOf="@+id/movie_poster"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/movie_title" />
+            app:layout_constraintTop_toBottomOf="@+id/movie_title"
+            app:layout_constraintBottom_toTopOf="@+id/movie_rating" />
 
         <TextView
             android:id="@+id/overview_title"
@@ -67,6 +96,10 @@
             android:text="@string/overview"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginTop="32dp"
+            android:fontFamily="@font/roboto_medium"
+            android:textStyle="bold"
+            android:textSize="16sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/movie_poster" />
@@ -78,6 +111,9 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="@{args.current.overview}"
+            android:fontFamily="@font/roboto_medium"
+            android:textStyle="italic"
+            android:textSize="14sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/overview_title" />

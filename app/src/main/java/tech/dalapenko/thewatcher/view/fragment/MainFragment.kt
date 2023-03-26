@@ -31,8 +31,7 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this.viewLifecycleOwner
-        binding.sharedViewModel = sharedViewModel
+
         with(requireActivity() as MenuHost) {
             addMenuProvider(MainFragmentMenuProvider(), viewLifecycleOwner, Lifecycle.State.RESUMED)
         }
@@ -48,15 +47,24 @@ class MainFragment : Fragment() {
     }
 
     private fun setupFragmentLayouts() {
+        setupNoDataLayout()
         setupNowPlayingSection()
         setupPopularSection()
         setupTopRatedSection()
     }
 
     private fun setupNowPlayingSection() {
-        with(binding.nowPlayingSection.sectionRecyclerView) {
-            adapter = nowPlayingAdapter
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        with(binding.nowPlayingSection) {
+            sectionTitle.setText(R.string.now_playing)
+
+            sectionRecyclerView.adapter = nowPlayingAdapter
+            sectionRecyclerView.layoutManager = LinearLayoutManager(
+                context, LinearLayoutManager.HORIZONTAL, false
+            )
+
+            sharedViewModel.emptyLiveData.observe(viewLifecycleOwner) { isEmpty ->
+                sectionGroup.visibility = if(isEmpty) View.INVISIBLE else View.VISIBLE
+            }
         }
 
         movieViewModel.nowPlayingMovie.observe(viewLifecycleOwner) { data ->
@@ -66,11 +74,18 @@ class MainFragment : Fragment() {
     }
 
     private fun setupPopularSection() {
-        with(binding.popularSection.sectionRecyclerView) {
-            adapter = popularMovieAdapter
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        }
+        with(binding.popularSection) {
+            sectionTitle.setText(R.string.popular_movie)
 
+            sectionRecyclerView.adapter = popularMovieAdapter
+            sectionRecyclerView.layoutManager = LinearLayoutManager(
+                context, LinearLayoutManager.HORIZONTAL, false
+            )
+
+            sharedViewModel.emptyLiveData.observe(viewLifecycleOwner) { isEmpty ->
+                sectionGroup.visibility = if(isEmpty) View.INVISIBLE else View.VISIBLE
+            }
+        }
 
         movieViewModel.popularMovies.observe(viewLifecycleOwner) { data ->
             sharedViewModel.isLiveDataEmpty(data)
@@ -79,14 +94,30 @@ class MainFragment : Fragment() {
     }
 
     private fun setupTopRatedSection() {
-        with(binding.topRatedSection.sectionRecyclerView) {
-            adapter = topRatedAdapter
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        with(binding.topRatedSection) {
+            sectionTitle.setText(R.string.top_rated)
+
+            sectionRecyclerView.adapter = topRatedAdapter
+            sectionRecyclerView.layoutManager = LinearLayoutManager(
+                context, LinearLayoutManager.HORIZONTAL, false
+            )
+
+            sharedViewModel.emptyLiveData.observe(viewLifecycleOwner) { isEmpty ->
+                sectionGroup.visibility = if(isEmpty) View.INVISIBLE else View.VISIBLE
+            }
         }
 
         movieViewModel.topRatedMovie.observe(viewLifecycleOwner) { data ->
             sharedViewModel.isLiveDataEmpty(data)
             topRatedAdapter.updateMovies(data)
+        }
+    }
+
+    private fun setupNoDataLayout() {
+        with(binding.emptyDataLayout) {
+            sharedViewModel.emptyLiveData.observe(viewLifecycleOwner) { isEmpty ->
+                root.visibility = if(isEmpty) View.VISIBLE else View.INVISIBLE
+            }
         }
     }
 

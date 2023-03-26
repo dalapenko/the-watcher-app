@@ -2,10 +2,16 @@ package tech.dalapenko.thewatcher.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import tech.dalapenko.thewatcher.data.model.Movie
 import tech.dalapenko.thewatcher.databinding.ItemMovieBinding
+import tech.dalapenko.thewatcher.view.fragment.MainFragmentDirections
 
 class MovieAdapter(
     private var movies: List<Movie> = emptyList()
@@ -41,8 +47,19 @@ class MovieAdapter(
         }
 
         fun bind(movie: Movie) {
-            binding.movieData = movie
-            binding.executePendingBindings()
+            movie.posterPath?.let { binding.itemMoviePoster.loadTmdbPoster(it) }
+            binding.itemMoviePoster.setOnClickListener {
+                val action = MainFragmentDirections.actionMainFragmentToCardFragment(movie)
+                it.findNavController().navigate(action)
+            }
+        }
+
+        private fun ImageView.loadTmdbPoster(tmdbPosterPath: String) {
+            Glide.with(this.context)
+                .load("https://image.tmdb.org/t/p/w342$tmdbPosterPath")
+                .transform(CenterCrop())
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(this);
         }
     }
 }

@@ -1,52 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.fragment.MainFragment">
 
-    <data>
-        <variable
-            name="sharedViewModel"
-            type="tech.dalapenko.thewatcher.view.viewmodel.SharedViewModel" />
-    </data>
+    <include layout="@layout/item_empty_data"
+        android:id="@+id/empty_data_layout"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <include layout="@layout/item_section"
+        android:id="@+id/now_playing_section"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".view.fragment.MainFragment">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-        <include layout="@layout/item_empty_data"
-            android:id="@+id/empty_data_layout"
-            app:sharedViewModel="@{sharedViewModel}"/>
+    <include layout="@layout/item_section"
+        android:id="@+id/popular_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/now_playing_section"/>
 
-        <include layout="@layout/item_section"
-            android:id="@+id/now_playing_section"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:title="@{@string/now_playing}"
-            app:sharedViewModel="@{sharedViewModel}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+    <include layout="@layout/item_section"
+        android:id="@+id/top_rated_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/popular_section"/>
 
-        <include layout="@layout/item_section"
-            android:id="@+id/popular_section"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:title="@{@string/popular_movie}"
-            app:sharedViewModel="@{sharedViewModel}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/now_playing_section"/>
-
-        <include layout="@layout/item_section"
-            android:id="@+id/top_rated_section"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:title="@{@string/top_rated}"
-            app:sharedViewModel="@{sharedViewModel}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/popular_section"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

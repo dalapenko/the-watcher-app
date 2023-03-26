@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="common_view_middle_margin">16dp</dimen>
+    <dimen name="common_view_small_margin">12dp</dimen>
+    <dimen name="common_view_big_margin">32dp</dimen>
+    <dimen name="movie_poster_width">120dp</dimen>
+    <dimen name="movie_poster_height">160dp</dimen>
+    <dimen name="movie_poster_corner_radius">4dp</dimen>
+    <dimen name="h1_header">21sp</dimen>
+    <dimen name="h2_header">18sp</dimen>
+    <dimen name="h3_header">14sp</dimen>
+    <dimen name="simple_text_size">14sp</dimen>
+    <dimen name="zero_size">0dp</dimen>
+    <dimen name="rating_title_margin">4dp</dimen>
+    <dimen name="common_view_big_padding">24dp</dimen>
+    <dimen name="common_view_middle_padding">16dp</dimen>
+    <dimen name="common_view_small_padding">8dp</dimen>
+</resources>

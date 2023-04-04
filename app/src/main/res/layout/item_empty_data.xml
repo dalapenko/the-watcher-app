@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/silver"
         android:background="@drawable/ic_network_problem"
-        android:padding="20dp"
+        android:padding="@dimen/common_view_big_padding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -29,7 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/no_data_icon"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp" />
+        android:layout_marginStart="@dimen/common_view_middle_margin"
+        android:layout_marginEnd="@dimen/common_view_middle_margin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

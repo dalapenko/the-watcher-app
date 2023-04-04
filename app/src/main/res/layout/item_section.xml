@@ -14,12 +14,12 @@
         android:id="@+id/section_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:paddingBottom="6dp"
+        android:layout_marginStart="@dimen/common_view_middle_margin"
+        android:layout_marginEnd="@dimen/common_view_middle_margin"
+        android:paddingBottom="@dimen/common_view_small_padding"
         android:fontFamily="@font/roboto_medium"
         android:textStyle="bold"
-        android:textSize="21sp"
+        android:textSize="@dimen/h1_header"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,8 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        android:paddingStart="@dimen/common_view_middle_padding"
+        android:paddingEnd="@dimen/common_view_middle_padding"
         app:layout_constraintTop_toBottomOf="@+id/section_title"
         app:layout_constraintStart_toStartOf="parent" />
 

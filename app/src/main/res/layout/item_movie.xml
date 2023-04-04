@@ -1,24 +1,14 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="128dp"
+    android:layout_height="172dp"
+    android:layout_marginEnd="8dp"
+    app:cardCornerRadius="4dp">
 
-    <data>
-        <variable
-            name="movieData"
-            type="tech.dalapenko.thewatcher.data.model.Movie" />
-    </data>
+    <ImageView
+        android:id="@+id/item_movie_poster"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="128dp"
-        android:layout_height="172dp"
-        android:layout_marginEnd="8dp"
-        app:cardCornerRadius="4dp">
-
-        <ImageView
-            android:id="@+id/item_movie_poster"
-            android:tmdbPosterPath="@{movieData.posterPath}"
-            android:onClickOpenMovieCard="@{movieData}"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </androidx.cardview.widget.CardView>
-</layout>
+</androidx.cardview.widget.CardView>

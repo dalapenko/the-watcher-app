@@ -1,14 +1,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/section_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="section_title, section_recycler_view" />
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/common_view_small_margin"
+    android:layout_marginBottom="@dimen/common_view_small_margin">
 
     <TextView
         android:id="@+id/section_title"
@@ -30,6 +26,8 @@
         android:clipToPadding="false"
         android:paddingStart="@dimen/common_view_middle_padding"
         android:paddingEnd="@dimen/common_view_middle_padding"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@+id/section_title"
         app:layout_constraintStart_toStartOf="parent" />
 

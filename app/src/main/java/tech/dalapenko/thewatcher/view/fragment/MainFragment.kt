@@ -63,11 +63,11 @@ class MainFragment : Fragment() {
             )
 
             sharedViewModel.emptyLiveData.observe(viewLifecycleOwner) { isEmpty ->
-                sectionGroup.visibility = if(isEmpty) View.INVISIBLE else View.VISIBLE
+                sectionGroup.visibility = if (isEmpty) View.INVISIBLE else View.VISIBLE
             }
         }
 
-        movieViewModel.nowPlayingMovie.observe(viewLifecycleOwner) { data ->
+        movieViewModel.nowPlayingLiveData.observe(viewLifecycleOwner) { data ->
             sharedViewModel.isLiveDataEmpty(data)
             nowPlayingAdapter.updateMovies(data)
         }
@@ -83,11 +83,11 @@ class MainFragment : Fragment() {
             )
 
             sharedViewModel.emptyLiveData.observe(viewLifecycleOwner) { isEmpty ->
-                sectionGroup.visibility = if(isEmpty) View.INVISIBLE else View.VISIBLE
+                sectionGroup.visibility = if (isEmpty) View.INVISIBLE else View.VISIBLE
             }
         }
 
-        movieViewModel.popularMovies.observe(viewLifecycleOwner) { data ->
+        movieViewModel.popularMovieLiveData.observe(viewLifecycleOwner) { data ->
             sharedViewModel.isLiveDataEmpty(data)
             popularMovieAdapter.updateMovies(data)
         }
@@ -103,11 +103,11 @@ class MainFragment : Fragment() {
             )
 
             sharedViewModel.emptyLiveData.observe(viewLifecycleOwner) { isEmpty ->
-                sectionGroup.visibility = if(isEmpty) View.INVISIBLE else View.VISIBLE
+                sectionGroup.visibility = if (isEmpty) View.INVISIBLE else View.VISIBLE
             }
         }
 
-        movieViewModel.topRatedMovie.observe(viewLifecycleOwner) { data ->
+        movieViewModel.topRatedLiveData.observe(viewLifecycleOwner) { data ->
             sharedViewModel.isLiveDataEmpty(data)
             topRatedAdapter.updateMovies(data)
         }
@@ -116,7 +116,7 @@ class MainFragment : Fragment() {
     private fun setupNoDataLayout() {
         with(binding.emptyDataLayout) {
             sharedViewModel.emptyLiveData.observe(viewLifecycleOwner) { isEmpty ->
-                root.visibility = if(isEmpty) View.VISIBLE else View.INVISIBLE
+                root.visibility = if (isEmpty) View.VISIBLE else View.INVISIBLE
             }
         }
     }
@@ -129,10 +129,10 @@ class MainFragment : Fragment() {
         override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
             when (menuItem.itemId) {
                 R.id.clean_cache_menu -> {
-                    movieViewModel.deleteAll()
-                    movieViewModel.refreshAll()
+                    movieViewModel.cleanDatabase()
+                    movieViewModel.fetchData()
                 }
-                R.id.refresh_menu -> movieViewModel.refreshAll()
+                R.id.refresh_menu -> movieViewModel.fetchData()
             }
 
             return true

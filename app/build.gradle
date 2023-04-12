@@ -70,6 +70,10 @@ dependencies {
     // Lifecycle components
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
 
+    // Groupie
+    implementation "com.github.lisawray.groupie:groupie:2.10.1"
+    implementation "com.github.lisawray.groupie:groupie-viewbinding:2.10.1"
+
     // Test libs
     testImplementation 'junit:junit:4.13.2'
 

@@ -7,10 +7,11 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
 import tech.dalapenko.thewatcher.R
 import tech.dalapenko.thewatcher.databinding.FragmentMainBinding
-import tech.dalapenko.thewatcher.view.adapter.MovieAdapter
+import tech.dalapenko.thewatcher.view.item.MovieSectionItem
 import tech.dalapenko.thewatcher.view.viewmodel.MovieViewModel
 import tech.dalapenko.thewatcher.view.viewmodel.SharedViewModel
 
@@ -22,10 +23,6 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
-    private val nowPlayingAdapter by lazy { MovieAdapter() }
-    private val popularMovieAdapter by lazy { MovieAdapter() }
-    private val topRatedAdapter by lazy { MovieAdapter() }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,7 +33,8 @@ class MainFragment : Fragment() {
             addMenuProvider(MainFragmentMenuProvider(), viewLifecycleOwner, Lifecycle.State.RESUMED)
         }
 
-        setupFragmentLayouts()
+        binding.mainSectionsRecyclerView.adapter =
+            GroupAdapter<GroupieViewHolder>().apply { setupFragmentLayouts(this) }
 
         return binding.root
     }
@@ -46,70 +44,41 @@ class MainFragment : Fragment() {
         _binding = null
     }
 
-    private fun setupFragmentLayouts() {
+    private fun setupFragmentLayouts(sectionAdapter: GroupAdapter<GroupieViewHolder>) {
         setupNoDataLayout()
-        setupNowPlayingSection()
-        setupPopularSection()
-        setupTopRatedSection()
+
+        setupNowPlayingSection(sectionAdapter)
+        setupPopularSection(sectionAdapter)
+        setupTopRatedSection(sectionAdapter)
     }
 
-    private fun setupNowPlayingSection() {
-        with(binding.nowPlayingSection) {
-            sectionTitle.setText(R.string.now_playing)
-
-            sectionRecyclerView.adapter = nowPlayingAdapter
-            sectionRecyclerView.layoutManager = LinearLayoutManager(
-                context, LinearLayoutManager.HORIZONTAL, false
-            )
-
-            sharedViewModel.emptyLiveData.observe(viewLifecycleOwner) { isEmpty ->
-                sectionGroup.visibility = if(isEmpty) View.INVISIBLE else View.VISIBLE
-            }
-        }
+    private fun setupNowPlayingSection(sectionAdapter: GroupAdapter<GroupieViewHolder>) {
+        val nowPlayingSection = MovieSectionItem(R.string.now_playing)
+        sectionAdapter.add(nowPlayingSection)
 
         movieViewModel.nowPlayingMovie.observe(viewLifecycleOwner) { data ->
             sharedViewModel.isLiveDataEmpty(data)
-            nowPlayingAdapter.updateMovies(data)
+            nowPlayingSection.updateMovies(data)
         }
     }
 
-    private fun setupPopularSection() {
-        with(binding.popularSection) {
-            sectionTitle.setText(R.string.popular_movie)
-
-            sectionRecyclerView.adapter = popularMovieAdapter
-            sectionRecyclerView.layoutManager = LinearLayoutManager(
-                context, LinearLayoutManager.HORIZONTAL, false
-            )
-
-            sharedViewModel.emptyLiveData.observe(viewLifecycleOwner) { isEmpty ->
-                sectionGroup.visibility = if(isEmpty) View.INVISIBLE else View.VISIBLE
-            }
-        }
+    private fun setupPopularSection(sectionAdapter: GroupAdapter<GroupieViewHolder>) {
+        val popularSectionItem = MovieSectionItem(R.string.popular_movie)
+        sectionAdapter.add(popularSectionItem)
 
         movieViewModel.popularMovies.observe(viewLifecycleOwner) { data ->
             sharedViewModel.isLiveDataEmpty(data)
-            popularMovieAdapter.updateMovies(data)
+            popularSectionItem.updateMovies(data)
         }
     }
 
-    private fun setupTopRatedSection() {
-        with(binding.topRatedSection) {
-            sectionTitle.setText(R.string.top_rated)
-
-            sectionRecyclerView.adapter = topRatedAdapter
-            sectionRecyclerView.layoutManager = LinearLayoutManager(
-                context, LinearLayoutManager.HORIZONTAL, false
-            )
-
-            sharedViewModel.emptyLiveData.observe(viewLifecycleOwner) { isEmpty ->
-                sectionGroup.visibility = if(isEmpty) View.INVISIBLE else View.VISIBLE
-            }
-        }
+    private fun setupTopRatedSection(sectionAdapter: GroupAdapter<GroupieViewHolder>) {
+        val topRatedSectionItem = MovieSectionItem(R.string.top_rated)
+        sectionAdapter.add(topRatedSectionItem)
 
         movieViewModel.topRatedMovie.observe(viewLifecycleOwner) { data ->
             sharedViewModel.isLiveDataEmpty(data)
-            topRatedAdapter.updateMovies(data)
+            topRatedSectionItem.updateMovies(data)
         }
     }
 

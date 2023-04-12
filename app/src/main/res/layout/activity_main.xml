@@ -8,21 +8,15 @@
     android:orientation="vertical"
     tools:context=".view.MainActivity">
 
-    <androidx.core.widget.NestedScrollView
+    <fragment
+        android:id="@+id/navigation_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:fillViewport="true">
-
-        <fragment
-            android:id="@+id/navigation_host_fragment"
-            android:name="androidx.navigation.fragment.NavHostFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/watcher_nav" />
-    </androidx.core.widget.NestedScrollView>
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/watcher_nav" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

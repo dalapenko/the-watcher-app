@@ -52,21 +52,23 @@ class MainFragment : Fragment() {
         setupTopRatedSection(sectionAdapter)
     }
 
+
     private fun setupNowPlayingSection(sectionAdapter: GroupAdapter<GroupieViewHolder>) {
         val nowPlayingSection = MovieSectionItem(R.string.now_playing)
         sectionAdapter.add(nowPlayingSection)
 
-        movieViewModel.nowPlayingMovie.observe(viewLifecycleOwner) { data ->
+        movieViewModel.nowPlayingLiveData.observe(viewLifecycleOwner) { data ->
             sharedViewModel.isLiveDataEmpty(data)
             nowPlayingSection.updateMovies(data)
         }
     }
 
+
     private fun setupPopularSection(sectionAdapter: GroupAdapter<GroupieViewHolder>) {
         val popularSectionItem = MovieSectionItem(R.string.popular_movie)
         sectionAdapter.add(popularSectionItem)
 
-        movieViewModel.popularMovies.observe(viewLifecycleOwner) { data ->
+        movieViewModel.popularMovieLiveData.observe(viewLifecycleOwner) { data ->
             sharedViewModel.isLiveDataEmpty(data)
             popularSectionItem.updateMovies(data)
         }
@@ -76,7 +78,7 @@ class MainFragment : Fragment() {
         val topRatedSectionItem = MovieSectionItem(R.string.top_rated)
         sectionAdapter.add(topRatedSectionItem)
 
-        movieViewModel.topRatedMovie.observe(viewLifecycleOwner) { data ->
+        movieViewModel.topRatedLiveData.observe(viewLifecycleOwner) { data ->
             sharedViewModel.isLiveDataEmpty(data)
             topRatedSectionItem.updateMovies(data)
         }
@@ -85,7 +87,7 @@ class MainFragment : Fragment() {
     private fun setupNoDataLayout() {
         with(binding.emptyDataLayout) {
             sharedViewModel.emptyLiveData.observe(viewLifecycleOwner) { isEmpty ->
-                root.visibility = if(isEmpty) View.VISIBLE else View.INVISIBLE
+                root.visibility = if (isEmpty) View.VISIBLE else View.INVISIBLE
             }
         }
     }
@@ -98,10 +100,10 @@ class MainFragment : Fragment() {
         override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
             when (menuItem.itemId) {
                 R.id.clean_cache_menu -> {
-                    movieViewModel.deleteAll()
-                    movieViewModel.refreshAll()
+                    movieViewModel.cleanDatabase()
+                    movieViewModel.fetchData()
                 }
-                R.id.refresh_menu -> movieViewModel.refreshAll()
+                R.id.refresh_menu -> movieViewModel.fetchData()
             }
 
             return true

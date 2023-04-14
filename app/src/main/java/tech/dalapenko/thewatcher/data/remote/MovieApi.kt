@@ -3,8 +3,8 @@ package tech.dalapenko.thewatcher.data.remote
 import retrofit2.http.GET
 import retrofit2.http.Query
 import tech.dalapenko.thewatcher.BuildConfig
-import tech.dalapenko.thewatcher.data.model.Movie
-import tech.dalapenko.thewatcher.data.model.Page
+import tech.dalapenko.thewatcher.data.remote.dto.MovieDto
+import tech.dalapenko.thewatcher.data.remote.dto.Page
 
 interface MovieApi {
 
@@ -18,19 +18,19 @@ interface MovieApi {
         @Query("page") page: Int = DEFAULT_PAGE,
         @Query("language") language: String = DEFAULT_LOCALE,
         @Query("api_key") apiKey: String = BuildConfig.TMDB_AUTH_TOKEN
-    ): Page<Movie>
+    ): Page<MovieDto>
 
     @GET("movie/popular")
     suspend fun getPopular(
         @Query("page") page: Int = DEFAULT_PAGE,
         @Query("language") language: String = DEFAULT_LOCALE,
         @Query("api_key") apiKey: String = BuildConfig.TMDB_AUTH_TOKEN
-    ): Page<Movie>
+    ): Page<MovieDto>
 
     @GET("movie/top_rated")
     suspend fun getTopRated(
         @Query("page") page: Int = DEFAULT_PAGE,
         @Query("language") language: String = DEFAULT_LOCALE,
         @Query("api_key") apiKey: String = BuildConfig.TMDB_AUTH_TOKEN
-    ): Page<Movie>
+    ): Page<MovieDto>
 }

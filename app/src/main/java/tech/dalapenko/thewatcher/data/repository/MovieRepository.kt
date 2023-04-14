@@ -4,9 +4,14 @@ import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import tech.dalapenko.thewatcher.data.local.MovieDao
+import tech.dalapenko.thewatcher.data.local.dbo.MovieDbo
 import tech.dalapenko.thewatcher.data.model.Movie
-import tech.dalapenko.thewatcher.data.model.Page
+import tech.dalapenko.thewatcher.data.model.mapper.MovieDboToModelMapper
+import tech.dalapenko.thewatcher.data.model.mapper.MovieDtoToModelMapper
+import tech.dalapenko.thewatcher.data.model.mapper.MovieModelToDboMapper
 import tech.dalapenko.thewatcher.data.remote.MovieApi
+import tech.dalapenko.thewatcher.data.remote.dto.MovieDto
+import tech.dalapenko.thewatcher.data.remote.dto.Page
 
 class MovieRepository(
     private val movieDao: MovieDao,
@@ -33,12 +38,14 @@ class MovieRepository(
     }
 
     private fun movieListFlow(
-        databaseFetch: suspend () -> List<Movie>,
-        remoteFetch: suspend () -> Page<Movie>
+        databaseFetch: suspend () -> List<MovieDbo>,
+        remoteFetch: suspend () -> Page<MovieDto>
     ): Flow<List<Movie>> = flow {
-        emit(databaseFetch.invoke())
+        val databaseMovieList = MovieDboToModelMapper.mapToList(databaseFetch.invoke())
 
-        val remoteMovieList = try {
+        emit(databaseMovieList)
+
+        val remoteMovieDtoList = try {
             remoteFetch.invoke().results
         } catch (e: Exception) {
             Log.d(
@@ -48,13 +55,19 @@ class MovieRepository(
             emptyList()
         }
 
-        if (remoteMovieList.isNotEmpty()) {
-            insertLocalData(*remoteMovieList.toTypedArray())
-            emit(databaseFetch.invoke())
+        if (!remoteMovieDtoList.isNullOrEmpty()) {
+            val remoteMovieList = MovieDtoToModelMapper.mapToList(remoteMovieDtoList)
+            val remoteMovieDboList = MovieModelToDboMapper.mapToList(remoteMovieList)
+
+            insertLocalData(*remoteMovieDboList.toTypedArray())
+
+            val updatedDatabaseMovieList = MovieDboToModelMapper.mapToList(databaseFetch.invoke())
+
+            emit(updatedDatabaseMovieList)
         }
     }
 
-    private suspend fun insertLocalData(vararg movie: Movie) {
+    private suspend fun insertLocalData(vararg movie: MovieDbo) {
         movieDao.insertMovie(*movie)
     }
 

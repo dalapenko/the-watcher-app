@@ -4,7 +4,8 @@ import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import tech.dalapenko.thewatcher.data.local.MovieDao
-import tech.dalapenko.thewatcher.data.local.dbo.MovieDbo
+import tech.dalapenko.thewatcher.data.local.dbo.MovieGenreCrossRefDbo
+import tech.dalapenko.thewatcher.data.local.dbo.MovieWithGenreDbo
 import tech.dalapenko.thewatcher.data.model.Movie
 import tech.dalapenko.thewatcher.data.model.mapper.MovieDboToModelMapper
 import tech.dalapenko.thewatcher.data.model.mapper.MovieDtoToModelMapper
@@ -38,7 +39,7 @@ class MovieRepository(
     }
 
     private fun movieListFlow(
-        databaseFetch: suspend () -> List<MovieDbo>,
+        databaseFetch: suspend () -> List<MovieWithGenreDbo>,
         remoteFetch: suspend () -> Page<MovieDto>
     ): Flow<List<Movie>> = flow {
         val databaseMovieList = MovieDboToModelMapper.mapToList(databaseFetch.invoke())
@@ -57,9 +58,8 @@ class MovieRepository(
 
         if (!remoteMovieDtoList.isNullOrEmpty()) {
             val remoteMovieList = MovieDtoToModelMapper.mapToList(remoteMovieDtoList)
-            val remoteMovieDboList = MovieModelToDboMapper.mapToList(remoteMovieList)
 
-            insertLocalData(*remoteMovieDboList.toTypedArray())
+            insertMovieData(remoteMovieList)
 
             val updatedDatabaseMovieList = MovieDboToModelMapper.mapToList(databaseFetch.invoke())
 
@@ -67,8 +67,16 @@ class MovieRepository(
         }
     }
 
-    private suspend fun insertLocalData(vararg movie: MovieDbo) {
-        movieDao.insertMovie(*movie)
+    private suspend fun insertMovieData(movieList: List<Movie>) {
+        val movieWithGenreList = MovieModelToDboMapper.mapToList(movieList)
+        val movieAssociateList = movieWithGenreList.associate { it.movie to it.genres }
+        val crossRefList = movieAssociateList.entries
+            .flatMap { entry -> entry.value.map { it to entry.key } }
+            .map { MovieGenreCrossRefDbo(movieId = it.second.id, genreId = it.first.id) }
+
+        movieDao.insertMovie(*movieAssociateList.keys.toTypedArray())
+        movieDao.insertGenre(*movieAssociateList.values.flatten().toTypedArray())
+        movieDao.insertMovieWithGenre(*crossRefList.toTypedArray())
     }
 
 }

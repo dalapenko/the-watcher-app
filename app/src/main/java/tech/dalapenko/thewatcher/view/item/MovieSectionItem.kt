@@ -17,7 +17,6 @@ class MovieSectionItem(
     @StringRes private val title: Int
 ) : BindableItem<ItemSectionBinding>() {
 
-    private val recyclerView: RecyclerView? = null
     private val adapter = GroupAdapter<GroupieViewHolder>()
     private val scrollListener = SaveStateOnScrollListener()
     private val sectionVisibilityDataObserver = SectionVisibilityDataObserver(adapter)
@@ -29,10 +28,12 @@ class MovieSectionItem(
             setSectionVisibility()
         }
 
-        viewBinding.sectionTitle.setText(title)
-        viewBinding.sectionRecyclerView.addOnScrollListener(scrollListener)
-        viewBinding.sectionRecyclerView.scrollToPosition(scrollListener.currentPosition)
-        viewBinding.sectionRecyclerView.adapter = adapter
+        with(viewBinding) {
+            sectionTitle.setText(title)
+            sectionRecyclerView.addOnScrollListener(scrollListener)
+            sectionRecyclerView.scrollToPosition(scrollListener.currentPosition)
+            sectionRecyclerView.adapter = adapter
+        }
     }
 
     override fun getLayout(): Int = R.layout.item_section
@@ -43,7 +44,6 @@ class MovieSectionItem(
 
     fun updateMovies(movieList: List<Movie>) {
         adapter.update(movieList.map(MovieItem::fromMovie))
-        recyclerView?.scrollToPosition(scrollListener.currentPosition)
     }
 
     private class SectionVisibilityDataObserver<VH : ViewHolder>(

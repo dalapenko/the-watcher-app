@@ -11,15 +11,11 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import tech.dalapenko.thewatcher.R
 import tech.dalapenko.thewatcher.databinding.FragmentMainBinding
-import tech.dalapenko.thewatcher.view.item.MovieSectionItem
 import tech.dalapenko.thewatcher.view.viewmodel.MovieViewModel
-import tech.dalapenko.thewatcher.view.viewmodel.SharedViewModel
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(R.layout.item_section) {
 
     private val movieViewModel: MovieViewModel by viewModels()
-    private val sharedViewModel: SharedViewModel by viewModels()
-
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
@@ -28,68 +24,32 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         with(requireActivity() as MenuHost) {
             addMenuProvider(MainFragmentMenuProvider(), viewLifecycleOwner, Lifecycle.State.RESUMED)
         }
 
-        binding.mainSectionsRecyclerView.adapter =
-            GroupAdapter<GroupieViewHolder>().apply { setupFragmentLayouts(this) }
+        with(binding.mainSectionsRecyclerView) {
+            adapter =
+                GroupAdapter<GroupieViewHolder>().apply { addAll(movieViewModel.movieSectionList) }
+        }
 
-        return binding.root
+        with(movieViewModel) {
+            isAllMovieSectionsEmpty.observe(viewLifecycleOwner) { isEmpty ->
+                binding.emptyDataLayout.root.visibility =
+                    if (isEmpty) View.VISIBLE else View.INVISIBLE
+            }
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun setupFragmentLayouts(sectionAdapter: GroupAdapter<GroupieViewHolder>) {
-        setupNoDataLayout()
-
-        setupNowPlayingSection(sectionAdapter)
-        setupPopularSection(sectionAdapter)
-        setupTopRatedSection(sectionAdapter)
-    }
-
-
-    private fun setupNowPlayingSection(sectionAdapter: GroupAdapter<GroupieViewHolder>) {
-        val nowPlayingSection = MovieSectionItem(R.string.now_playing)
-        sectionAdapter.add(nowPlayingSection)
-
-        movieViewModel.nowPlayingLiveData.observe(viewLifecycleOwner) { data ->
-            sharedViewModel.isLiveDataEmpty(data)
-            nowPlayingSection.updateMovies(data)
-        }
-    }
-
-
-    private fun setupPopularSection(sectionAdapter: GroupAdapter<GroupieViewHolder>) {
-        val popularSectionItem = MovieSectionItem(R.string.popular_movie)
-        sectionAdapter.add(popularSectionItem)
-
-        movieViewModel.popularMovieLiveData.observe(viewLifecycleOwner) { data ->
-            sharedViewModel.isLiveDataEmpty(data)
-            popularSectionItem.updateMovies(data)
-        }
-    }
-
-    private fun setupTopRatedSection(sectionAdapter: GroupAdapter<GroupieViewHolder>) {
-        val topRatedSectionItem = MovieSectionItem(R.string.top_rated)
-        sectionAdapter.add(topRatedSectionItem)
-
-        movieViewModel.topRatedLiveData.observe(viewLifecycleOwner) { data ->
-            sharedViewModel.isLiveDataEmpty(data)
-            topRatedSectionItem.updateMovies(data)
-        }
-    }
-
-    private fun setupNoDataLayout() {
-        with(binding.emptyDataLayout) {
-            sharedViewModel.emptyLiveData.observe(viewLifecycleOwner) { isEmpty ->
-                root.visibility = if (isEmpty) View.VISIBLE else View.INVISIBLE
-            }
-        }
     }
 
     private inner class MainFragmentMenuProvider : MenuProvider {

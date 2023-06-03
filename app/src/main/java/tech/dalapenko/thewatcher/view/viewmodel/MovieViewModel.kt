@@ -8,10 +8,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import tech.dalapenko.thewatcher.R
 import tech.dalapenko.thewatcher.data.local.MovieDatabase
 import tech.dalapenko.thewatcher.data.model.Movie
 import tech.dalapenko.thewatcher.data.repository.MovieRepository
 import tech.dalapenko.thewatcher.network.NetworkModule
+import tech.dalapenko.thewatcher.view.item.MovieSectionItem
 
 class MovieViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -23,17 +25,24 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
         movieApi = NetworkModule.movieApi
     )
 
-    private val _nowPlayingLiveData: MutableLiveData<List<Movie>> = MutableLiveData()
-    val nowPlayingLiveData: LiveData<List<Movie>> = _nowPlayingLiveData
+    private val _isSectionListEmptyLiveData: MutableLiveData<Boolean> = MutableLiveData(false)
 
-    private val _popularMovieLiveData: MutableLiveData<List<Movie>> = MutableLiveData()
-    val popularMovieLiveData: LiveData<List<Movie>> = _popularMovieLiveData
+    private val nowPlayingLiveData: MutableLiveData<List<Movie>> = MutableLiveData()
+    private val popularMovieLiveData: MutableLiveData<List<Movie>> = MutableLiveData()
+    private val topRatedLiveData: MutableLiveData<List<Movie>> = MutableLiveData()
 
-    private val _topRatedLiveData: MutableLiveData<List<Movie>> = MutableLiveData()
-    val topRatedLiveData: LiveData<List<Movie>> = _topRatedLiveData
+    private val nowPlayingSection = MovieSectionItem(R.string.now_playing)
+    private val popularMovieSection = MovieSectionItem(R.string.popular_movie)
+    private val topRatedSection = MovieSectionItem(R.string.top_rated)
 
+    val movieSectionList = listOf(nowPlayingSection, popularMovieSection, topRatedSection)
+    val isAllMovieSectionsEmpty: LiveData<Boolean> = _isSectionListEmptyLiveData
 
     init {
+        nowPlayingLiveData.observeForever { nowPlayingSection.update(it) }
+        popularMovieLiveData.observeForever { popularMovieSection.update(it) }
+        topRatedLiveData.observeForever { topRatedSection.update(it) }
+
         fetchData()
     }
 
@@ -43,23 +52,9 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
             cleanDbJob?.join()
 
             with(movieRepository) {
-                launch {
-                    getNowPlaying().collect { nowPlayingMovieList ->
-                        _nowPlayingLiveData.postValue(nowPlayingMovieList)
-                    }
-                }
-
-                launch {
-                    getPopular().collect { popularMovieList ->
-                        _popularMovieLiveData.postValue(popularMovieList)
-                    }
-                }
-
-                launch {
-                    getTopRated().collect { topRatedMovieList ->
-                        _topRatedLiveData.postValue(topRatedMovieList)
-                    }
-                }
+                launch { getNowPlaying().collect(nowPlayingLiveData::postValue) }
+                launch { getPopular().collect(popularMovieLiveData::postValue) }
+                launch {  getTopRated().collect(topRatedLiveData::postValue) }
             }
         }
     }
@@ -75,5 +70,10 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
         super.onCleared()
         fetchJob?.cancel()
         cleanDbJob?.cancel()
+    }
+
+    private fun MovieSectionItem.update(movieList: List<Movie>) {
+        updateMovies(movieList)
+        _isSectionListEmptyLiveData.value = movieList.isEmpty()
     }
 }
